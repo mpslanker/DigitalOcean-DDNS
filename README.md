@@ -12,6 +12,8 @@ DOMAIN = '<domain>'
 RECORD = '<record>'
 RECORD_TYPE  = '<record type>'
 
+WindowsSetup.ps1 has not been fully tested but should help you get the environment up and running for the script.
+
 ** Note that it is not considered best practice to store your API keys in the file that could potentially get published. You may want to store it as an environment variable have set token as so: TOKEN = ENV["API_KEY"]
 
 After this you should be able to run the script via command line "ruby do-ddns-update.rb" and see the changes on the DNS portal of digital oceans site.  If it has worked correctly you can use this with your favorite launch daemon or task scheduler to run automatically.
