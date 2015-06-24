@@ -1,9 +1,15 @@
+Import-Module BitsTransfer
+
 # Download the railsinstaller.
 
 $rails_installer = "https://s3.amazonaws.com/railsinstaller/Windows/railsinstaller-3.1.0.exe"
 $download_path = "C:\Users\$([Environment]::UserName)\Downloads\railsinstaller-3.1.0.exe"
 
-Invoke-WebRequest $rails_installer -OutFile $download_path
+# Old slow way.
+#Invoke-WebRequest $rails_installer -OutFile $download_path
+
+# Faster method
+Start-BitsTransfer $rails_installer $download_path
 
 # Silently install railsinstaller.
 $expr_string = "C:\Users\$([Environment]::UserName)\Downloads\railsinstaller-3.1.0.exe /verysilent /tasks=`"assocfiles,modpath`""
@@ -29,8 +35,8 @@ Invoke-WebRequest $cert_file_2 -OutFile $ssl_path
 
 [Environment]::SetEnvironmentVariable("SSL_CERT_FILE", "C:\RailsInstaller\Ruby2.1.0\lib\ruby\2.1.0\rubygems\ssl_certs\cacert.pem", "Machine")
 
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine")
-$env:Path = [System.Environment]::GetEnvironmentVariable("Path","User")
+# Reload Path
+$env:Path = [Environment]::GetEnvironmentVariable("Path")
 
 $get_rubygems = "gem install nokogiri barge"
 Invoke-Expression $get_rubygems
