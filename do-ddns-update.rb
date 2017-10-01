@@ -1,4 +1,4 @@
-require 'barge'
+require 'droplet_kit'
 require 'nokogiri'
 require 'open-uri'
 require 'pp'
@@ -23,7 +23,7 @@ class DDNSClient
         @current_external_ip = self.get_external_ip()
 
         @token = token
-        @client = Barge::Client.new(access_token: @token)
+        @client = DropletKit::Client.new(access_token: @token)
 
         @domain =  domain
         @record_name =  record_name
@@ -38,9 +38,9 @@ class DDNSClient
 
     def get_record()
         # Return a list of all records in a specific domain
-        all_records = @client.domain.records(@domain)
+        all_records = @client.domain_records.all(for_domain: @domain)
         # Loop through until we find a record that meets the requirements
-        all_records.domain_records.each do |r|
+        all_records.entries.each do |r|
             if r.type == @record_type && r.name == @record_name then
                 return @record = r
             end
@@ -52,7 +52,7 @@ class DDNSClient
     def update_record()
         updated_record = @record
         updated_record.data = self.current_external_ip
-        @client.domain.update_record(@domain, @record.id, updated_record)
+        @client.domain_records.update(updated_record, for_domain: @domain, id: @record.id)
     end
 end
 
